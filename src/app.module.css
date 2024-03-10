@@ -1,0 +1,9 @@
+.bg {
+  background-color: rgb(12, 87, 104);
+}
+.Lyrics {
+  float: right;
+  display: flex;
+  height: 100px;
+  width: 100px;
+}

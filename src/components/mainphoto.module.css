@@ -1,0 +1,6 @@
+.bg {
+  height: 400px;
+  background-image: url("../public/main.webp");
+  background-size: cover;
+  background-position: center;
+}

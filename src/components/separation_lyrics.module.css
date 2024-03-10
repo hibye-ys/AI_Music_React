@@ -1,0 +1,13 @@
+.box {
+  top: 310px; /* 상단에서 20px 떨어진 위치 */
+  right: 10px; /* 오른쪽에서 20px 떨어진 위치 */
+  width: 28%;
+  height: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(59, 56, 112);
+  overflow-y: auto;
+  z-index: 1000;
+  position: fixed;
+}
