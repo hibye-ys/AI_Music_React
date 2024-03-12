@@ -9,6 +9,10 @@ import Separation_Lyrics from "./components/Separation_Lyrics";
 import styles from "./app.module.css";
 import Separation_Record from "./components/Separation_Record";
 import Separation_Upload from "./components/Separation_Upload";
+import VC_Upload from "./components/VC_Upload";
+import VC_TrainButton from "./components/VC_TrainButton";
+import VC_InferencTab from "./components/VC_InferencTab";
+import VC_Wave from "./components/VC_Wave";
 
 function App() {
   return (
@@ -31,6 +35,27 @@ function App() {
               <Head />
               <Separation_Upload />
               <Separation_Record />
+            </>
+          }
+        />
+        <Route
+          path="/VCtrain"
+          element={
+            <>
+              <Head />
+              <VC_Upload />
+              <VC_TrainButton />
+            </>
+          }
+        />
+        <Route
+          path="/VCinference"
+          element={
+            <>
+              <Head />
+              <VC_Upload />
+              <VC_InferencTab />
+              <VC_Wave />
             </>
           }
         />

@@ -20,17 +20,17 @@ export default function Head() {
             </Nav.Link>
             <Nav.Link
               onClick={() => {
-                navigate("/vc");
+                navigate("/VCtrain");
               }}
             >
-              Voice Conversion
+              Train
             </Nav.Link>
             <Nav.Link
               onClick={() => {
-                navigate("/pitch");
+                navigate("/VCinference");
               }}
             >
-              Pitch Guide
+              Voice Conversion
             </Nav.Link>
           </Nav>
         </Container>

@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.1",
     "@wavesurfer/react": "^1.0.4",
+    "antd": "^5.15.2",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
     "create-vite": "^5.2.1",

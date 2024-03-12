@@ -1,0 +1,13 @@
+.Button {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.Text {
+  text-align: center;
+}
+
+.TrainStatus {
+  text-align: center;
+}
