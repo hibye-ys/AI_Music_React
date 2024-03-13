@@ -16,7 +16,7 @@ import VC_Inference_Upload from "./components/VC_Inference_Upload";
 
 function App() {
   return (
-    <div>
+    <div className={styles.App}>
       <Routes>
         <Route
           path="/"
