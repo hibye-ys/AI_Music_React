@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import WaveSurfer from "wavesurfer.js";
 import RecordRTC from "recordrtc";
+import axios from "axios";
 
 const WaveformRecorder = () => {
   const [recorder, setRecorder] = useState(null);

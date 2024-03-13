@@ -9,10 +9,10 @@ import Separation_Lyrics from "./components/Separation_Lyrics";
 import styles from "./app.module.css";
 import Separation_Record from "./components/Separation_Record";
 import Separation_Upload from "./components/Separation_Upload";
-import VC_Upload from "./components/VC_Upload";
+import VC_Train_Upload from "./components/VC_Train_Upload";
 import VC_TrainButton from "./components/VC_TrainButton";
 import VC_InferencTab from "./components/VC_InferencTab";
-import VC_Wave from "./components/VC_Wave";
+import VC_Inference_Upload from "./components/VC_Inference_Upload";
 
 function App() {
   return (
@@ -22,9 +22,11 @@ function App() {
           path="/"
           element={
             <>
-              <Head />
-              <MainPhoto />
-              <MainButton />
+              <div className={styles.Main}>
+                <Head />
+                <MainPhoto />
+                <MainButton />
+              </div>
             </>
           }
         />
@@ -32,9 +34,11 @@ function App() {
           path="/separation"
           element={
             <>
-              <Head />
-              <Separation_Upload />
-              <Separation_Record />
+              <div className={styles.separation}>
+                <Head />
+                <Separation_Upload />
+                <Separation_Record />
+              </div>
             </>
           }
         />
@@ -43,7 +47,7 @@ function App() {
           element={
             <>
               <Head />
-              <VC_Upload />
+              <VC_Train_Upload />
               <VC_TrainButton />
             </>
           }
@@ -53,9 +57,8 @@ function App() {
           element={
             <>
               <Head />
-              <VC_Upload />
+              <VC_Inference_Upload />
               <VC_InferencTab />
-              <VC_Wave />
             </>
           }
         />

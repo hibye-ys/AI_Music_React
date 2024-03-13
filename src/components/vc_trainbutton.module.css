@@ -1,6 +1,6 @@
 .Button {
   display: flex;
-
+  padding-top: 100px;
   flex-direction: column;
 }
 
@@ -10,4 +10,9 @@
 
 .TrainStatus {
   text-align: center;
+}
+
+.StatusMessage {
+  text-align: center;
+  padding-top: 20px;
 }

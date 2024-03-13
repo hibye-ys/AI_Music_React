@@ -1,0 +1,12 @@
+.waveform {
+}
+
+.Button {
+  display: flex;
+  padding-top: 100px;
+  flex-direction: column;
+}
+
+.controls {
+  padding: auto;
+}

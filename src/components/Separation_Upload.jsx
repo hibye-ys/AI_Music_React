@@ -7,11 +7,21 @@ function Separation_Upload() {
   const [selectedFile, setSelectedFile] = useState(null);
   const waveformVocalRef = useRef(null);
   const waveformInstrumRef = useRef(null);
-
-
+  const [fileName, setFileName] = useState("");
+  const [status, setStatus] = useState("");
+  const [audioUrls, setAudioUrls] = useState({ vocal: "", instrum: "" });
+  const [isVocalLoaded, setIsVocalLoaded] = useState(false);
+  const [isInstrumLoaded, setIsInstrumLoaded] = useState(false);
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      setFileName(file.name);
+      setSelectedFile(file);
+    }
+  };
+  const handleClick = () => {
+    document.getElementById("file_input").click();
   };
 
   const handleUpload = () => {
@@ -20,87 +30,121 @@ function Separation_Upload() {
     formData.append("user_id", "123");
     formData.append("audio", selectedFile);
 
-
     console.log("Uploading", selectedFile);
-    axios.post("http://localhost:5000/separate", formData,  {
+    axios.post("http://localhost:5000/separate", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }
-    );
+        "Content-Type": "multipart/form-data",
+      },
+    });
   };
-
-
-  const [status, setStatus] = useState('');
-  const [audioUrls, setAudioUrls] = useState({vocal:"", instrum:""});
 
   const requestData = {
     user_id: "123",
     artist: "daftpunk",
-    filename: "Get_Lucky.wav"
-  }
+    filename: "Get_Lucky.wav",
+  };
 
   const handleStatusCheck = async () => {
-    const response = await axios.post('http://localhost:5000/download', requestData);
-    console.log(response)
+    const response = await axios.post(
+      "http://localhost:5000/download",
+      requestData
+    );
+    console.log(response);
 
-  
     setStatus(response.data.status);
-    setAudioUrls({ vocal: response.data.vocal, instrum: response.data.instrum });
+    setAudioUrls({
+      vocal: response.data.vocal,
+      instrum: response.data.instrum,
+    });
 
-    if (response.data.status === 'Completed') {
+    if (response.data.status === "Completed") {
       waveformVocalRef.current.load(response.data.vocal);
       waveformInstrumRef.current.load(response.data.instrum);
     }
-}
-
+  };
 
   useEffect(() => {
-    waveformVocalRef.current = WaveSurfer.create({
-      container: '#waveform-vocal',
-      waveColor: 'violet',
-      progressColor: 'purple',
-    });
+    if (status === "Completed") {
+      waveformVocalRef.current = WaveSurfer.create({
+        container: "#waveform-vocal",
+        waveColor: "violet",
+        progressColor: "purple",
+      });
 
-    waveformInstrumRef.current = WaveSurfer.create({
-      container: '#waveform-instrum',
-      waveColor: 'green',
-      progressColor: 'darkgreen',
-    });
+      waveformInstrumRef.current = WaveSurfer.create({
+        container: "#waveform-instrum",
+        waveColor: "green",
+        progressColor: "darkgreen",
+      });
+      waveformVocalRef.current.on("ready", () => setIsVocalLoaded(true));
+      waveformInstrumRef.current.on("ready", () => setIsInstrumLoaded(true));
+      waveformVocalRef.current.load(audioUrls.vocal);
+      waveformInstrumRef.current.load(audioUrls.instrum);
 
-    return () => {
- 
-      waveformVocalRef.current.destroy();
-      waveformInstrumRef.current.destroy();
-    };
-  }, []);
+      return () => {
+        waveformVocalRef.current.destroy();
+        waveformInstrumRef.current.destroy();
+      };
+    }
+    // 의존성 배열에 status와 audioUrls를 추가합니다.
+  }, [status, audioUrls.vocal, audioUrls.instrum]);
 
-
-
-  const togglePlayPause = (waveformRef) => {
-    if (waveformRef.current) {
+  const togglePlayPause = (waveformRef, isLoaded) => {
+    if (isLoaded && waveformRef.current) {
       waveformRef.current.playPause();
     }
   };
 
-
-
   return (
     <div>
-      <h1 className={styles.HeadText}>파일을 업로드 하세요</h1>
       <div className={styles.UploadButton}>
-        <input type="file" onChange={handleFileChange} />
-        <button onClick={handleUpload}>Upload</button>
+        <input
+          type="file"
+          id="file_input"
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+        />
+
+        <button className={styles.customButton} onClick={handleClick}>
+          클릭하여 파일을 업로드 하세요
+        </button>
+        <button className={styles.upload} onClick={handleUpload}>
+          Upload
+        </button>
       </div>
+
       <div className={styles.StatusButton}>
-        <button onClick={handleStatusCheck} className={styles.button}>상태확인하기</button>  
+        <button onClick={handleStatusCheck} className={styles.button}>
+          상태확인하기
+        </button>
         <div className={styles.processing}>{status}</div>
-        <div id="waveform-vocal" ref={waveformVocalRef}></div>
-        <button onClick={() => togglePlayPause(waveformVocalRef)}>Vocal Play/Pause</button>
-        <a href={audioUrls.vocal} download>Download VocaL</a>
-        <div id="waveform-instrum" ref={waveformInstrumRef}></div>
-        <button onClick={() => togglePlayPause(waveformInstrumRef)}>Instrum Play/Pause</button>
-        <a href={audioUrls.instrum} download>Download instrument</a>
+        {status === "Completed" && (
+          <>
+            <div id="waveform-vocal" ref={waveformVocalRef}></div>
+            <button
+              className={styles.PlayPause}
+              onClick={() => togglePlayPause(waveformVocalRef, isVocalLoaded)}
+            >
+              Play/Pause
+            </button>
+            <a className={styles.Download} href={audioUrls.vocal} download>
+              Download
+            </a>
+
+            <div id="waveform-instrum" ref={waveformInstrumRef}></div>
+            <button
+              className={styles.PlayPause}
+              onClick={() =>
+                togglePlayPause(waveformInstrumRef, isInstrumLoaded)
+              }
+            >
+              Play/Pause
+            </button>
+            <a className={styles.Download} href={audioUrls.instrum} download>
+              Download
+            </a>
+          </>
+        )}
       </div>
     </div>
   );

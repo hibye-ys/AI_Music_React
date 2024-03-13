@@ -2,15 +2,51 @@ import React from "react";
 import { InboxOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
 const { Dragger } = Upload;
+
+const customRequest = (options) => {
+  const { onSuccess, onError, file, onProgress } = options;
+  const formData = new FormData();
+  formData.append("user_id", "123");
+  formData.append("artist", "daftpunk");
+  formData.append("file", file);
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "http://0.0.0.0:5000/vc_training", true);
+  xhr.timeout = 300000; // 타임아웃을 30초로 설정
+
+  xhr.upload.onprogress = (event) => {
+    if (event.lengthComputable) {
+      onProgress({ percent: (event.loaded / event.total) * 100 });
+    }
+  };
+
+  xhr.onload = () => {
+    if (xhr.status === 200) {
+      onSuccess("Upload success");
+    } else {
+      onError("Upload failed");
+    }
+  };
+
+  xhr.ontimeout = () => {
+    message.error("Upload timed out");
+    onError("Upload timed out");
+  };
+
+  xhr.onerror = () => {
+    message.error("Upload failed");
+    onError("Upload failed");
+  };
+
+  xhr.send(formData);
+};
+
 const props = {
   name: "file",
   multiple: true,
-  action: "https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188",
+  customRequest,
   onChange(info) {
     const { status } = info.file;
-    if (status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
     if (status === "done") {
       message.success(`${info.file.name} file uploaded successfully.`);
     } else if (status === "error") {
@@ -21,6 +57,7 @@ const props = {
     console.log("Dropped files", e.dataTransfer.files);
   },
 };
+
 const VC_Upload = () => (
   <Dragger {...props}>
     <p className="ant-upload-drag-icon">
@@ -33,4 +70,5 @@ const VC_Upload = () => (
     </p>
   </Dragger>
 );
+
 export default VC_Upload;

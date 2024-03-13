@@ -1,0 +1,18 @@
+.btnupload {
+  width: 150px;
+  height: 100px;
+  text-align: center;
+  background: #fff;
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+  display: grid;
+  align-items: center;
+}
+
+.button {
+  text-align: center;
+  align-items: center;
+  display: block;
+}
