@@ -1,48 +1,97 @@
-import React, { useState } from "react";
-import axios from "axios";
 import styles from "./vc_inference_upload.module.css";
+import { useState, useRef } from "react";
+import axios from "axios";
+import { MdCloudUpload, MdDelete } from "react-icons/md";
+import { AiFillFileImage } from "react-icons/ai";
 
-function FileUpload() {
-  const [files, setFiles] = useState([]);
+const VC_Inference_Upload = () => {
+  const [fileName, setFileName] = useState("");
+  const [file, setFile] = useState(null);
+  const formRef = useRef(null);
 
-  const handleFileChange = (event) => {
-    setFiles(event.target.files);
+  const handleFilesChange = ({ target: { files } }) => {
+    if (files.length > 0) {
+      setFile(files[0]);
+      setFileName(files[0].name);
+    }
   };
 
-  const handleUpload = () => {
+  const deleteFile = () => {
+    setFileName("");
+    setFile(null);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const formData = new FormData();
     formData.append("artist", "daftpunk");
     formData.append("user_id", "123");
-    for (let i = 0; i < files.length; i++) {
-      formData.append("audio", files[i]);
+    if (file) {
+      formData.append("audio", file);
     }
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/vc_inference",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Server Response:", response.data);
+    } catch (error) {
+      console.error("Error uploading file:", error);
     }
-    axios
-      .post("http://localhost:5000/vc_inference", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log("Success:", response);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+  };
+
+  const handleExternalSubmit = () => {
+    if (formRef.current) {
+      formRef.current.dispatchEvent(
+        new Event("submit", { cancelable: true, bubbles: true })
+      );
+    }
   };
 
   return (
-    <div>
-      <div className={styles.btnupload}>
-        <input type="file" multiple onChange={handleFileChange} />
-      </div>
-      <div className={styles.button}>
-        <button onClick={handleUpload}>Upload</button>
-      </div>
-    </div>
+    <main className={styles.mainContainer}>
+      <form ref={formRef} onSubmit={handleSubmit} className={styles.formStyle}>
+        <input
+          type="file"
+          accept="audio/*"
+          className="input-field"
+          hidden
+          onChange={handleFilesChange}
+        />
+        <div
+          className={styles.uploadArea}
+          onClick={() => document.querySelector(".input-field").click()}
+        >
+          {fileName === "" ? (
+            <>
+              <MdCloudUpload color="#1475cf" size={70} />
+              <p>변환 하고 싶은 파일을 업로드 하세요</p>
+            </>
+          ) : (
+            <h2 className={styles.Text}>{fileName} selected</h2>
+          )}
+        </div>
+      </form>
+      {fileName && (
+        <section className={styles.uploadedRow}>
+          <AiFillFileImage color="#1475cf" size={40} />
+          <span className={styles.Text}>
+            {fileName}
+            <MdDelete onClick={deleteFile} />
+          </span>
+        </section>
+      )}
+      <button className={styles.submitButton} onClick={handleExternalSubmit}>
+        Upload File
+      </button>
+    </main>
   );
-}
+};
 
-export default FileUpload;
+export default VC_Inference_Upload;

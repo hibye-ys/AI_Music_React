@@ -11,12 +11,13 @@ import Separation_Record from "./components/Separation_Record";
 import Separation_Upload from "./components/Separation_Upload";
 import VC_Train_Upload from "./components/VC_Train_Upload";
 import VC_TrainButton from "./components/VC_TrainButton";
-import VC_InferencTab from "./components/VC_InferencTab";
+import VC_InferenceTab from "./components/VC_InferenceTab";
 import VC_Inference_Upload from "./components/VC_Inference_Upload";
+//import Separation_Status from "./components/Separation_Status";
 
 function App() {
   return (
-    <div>
+    <div className={styles.App}>
       <Routes>
         <Route
           path="/"
@@ -37,7 +38,8 @@ function App() {
               <div className={styles.separation}>
                 <Head />
                 <Separation_Upload />
-                <Separation_Record />
+
+                {/* <Separation_Record /> */}
               </div>
             </>
           }
@@ -46,9 +48,11 @@ function App() {
           path="/VCtrain"
           element={
             <>
-              <Head />
-              <VC_Train_Upload />
-              <VC_TrainButton />
+              <div className={styles.VCtrain}>
+                <Head />
+                <VC_Train_Upload />
+                <VC_TrainButton />
+              </div>
             </>
           }
         />
@@ -58,7 +62,7 @@ function App() {
             <>
               <Head />
               <VC_Inference_Upload />
-              <VC_InferencTab />
+              <VC_InferenceTab />
             </>
           }
         />
