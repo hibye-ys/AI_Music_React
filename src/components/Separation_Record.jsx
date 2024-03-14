@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import WaveSurfer from "wavesurfer.js";
 import RecordRTC from "recordrtc";
 import axios from "axios";
+import styles from "./separation_record.module.css";
 
 const WaveformRecorder = () => {
   const [recorder, setRecorder] = useState(null);
@@ -27,8 +28,8 @@ const WaveformRecorder = () => {
         const newRecorder = new RecordRTC(stream, {
           type: "audio",
           mimeType: "audio/wav",
-          recorderType: RecordRTC.StereoAudioRecorder, // WAV 형식으로 강제 설정
-          numberOfAudioChannels: 1, // 모노 채널로 설정
+          recorderType: RecordRTC.StereoAudioRecorder,
+          numberOfAudioChannels: 1,
           sampleRate: 48000,
           timeSlice: 1000,
           onTimeStamp: function (timestamp) {},
@@ -64,18 +65,20 @@ const WaveformRecorder = () => {
 
   return (
     <div>
-      <button onClick={toggleRecording}>
+      <div id="waveform"></div>
+      <button className={styles.recording} onClick={toggleRecording}>
         {isRecording ? "Stop Recording" : "Start Recording"}
       </button>
-      <button onClick={playAudio}>Play/Pause</button>
+      <button className={styles.PlayPause} onClick={playAudio}>
+        Play/Pause
+      </button>
       {latestRecording && (
-        <button>
+        <button className={styles.Download}>
           <a href={latestRecording.url} download="recording.wav">
             Download
           </a>
         </button>
       )}
-      <div id="waveform"></div>
     </div>
   );
 };
